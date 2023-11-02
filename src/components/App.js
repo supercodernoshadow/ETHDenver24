@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Container } from 'react-bootstrap'
+import { Container, Row, Col } from 'react-bootstrap'
 import { ethers } from 'ethers'
+
+import villa from '../Villa.png'
 
 // Components
 import Navigation from './Navigation';
@@ -18,6 +20,9 @@ function App() {
 
   const [account, setAccount] = useState(null)
 
+  const [nightlyRate, setNightlyRate] = useState(0)
+  const [balance, setBalance] = useState(0)
+
   const [isLoading, setIsLoading] = useState(true)
 
   const loadBlockchainData = async () => {
@@ -26,13 +31,19 @@ function App() {
     setProvider(provider)
 
     // Initiate token
-    token = new ethers.Contract(config[31337].token.address, TOKEN_ABI, provider)
+    const token = new ethers.Contract(config[31337].token.address, TOKEN_ABI, provider)
     setToken(token)
 
     // Fetch accounts
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
     const account = ethers.utils.getAddress(accounts[0])
     setAccount(account)
+
+    // Fetch cost
+    setNightlyRate(await token.getCost(1))
+
+    // Fetch account balance
+    setBalance(await token.balanceOf(account, 1))
 
     setIsLoading(false)
   }
@@ -53,7 +64,14 @@ function App() {
         <Loading />
       ) : (
         <>
-          <p className='text-center'>Edit App.js to add your code here.</p>
+          <Row>
+            <Col>
+              <img src={villa} alt="" style={{ width: '600px', height: '400px' }}/>
+            </Col>
+            <Col>
+            
+            </Col>
+          </Row>
         </>
       )}
     </Container>

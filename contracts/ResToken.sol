@@ -79,4 +79,9 @@ contract ResToken is ERC1155, Ownable {
         require(listingId <= listingCount.current(), "Invalid listing ID");
         return (listings[listingId]).name;
     }
+
+    // Get nightly rate for a listing
+    function getCost(uint256 listingId) external view returns (uint256) {
+        return(listings[listingId].nightlyRate);
+    }
 }
