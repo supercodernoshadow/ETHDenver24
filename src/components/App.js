@@ -7,6 +7,8 @@ import villa from '../Villa.png'
 // Components
 import Navigation from './Navigation';
 import Loading from './Loading';
+import Data from './Data'
+import Mint from './Mint';
 
 // ABIs: Import your contract ABIs here
 import TOKEN_ABI from '../abis/ResToken.json'
@@ -19,6 +21,8 @@ function App() {
   const[token, setToken] = useState(null)
 
   const [account, setAccount] = useState(null)
+
+  const[listing, setListings] = useState(null)
 
   const [nightlyRate, setNightlyRate] = useState(0)
   const [balance, setBalance] = useState(0)
@@ -45,6 +49,18 @@ function App() {
     // Fetch account balance
     setBalance(await token.balanceOf(account, 1))
 
+    // Fetch listing count
+    const count = await token.listingCount()
+    const items = []
+
+    //Fetch proposals
+    for(var i = 0; i < count; i++) {
+      const listing = await token.listings(i+1)
+      items.push(listing)
+    }
+
+    setListings(items)
+
     setIsLoading(false)
   }
 
@@ -69,7 +85,17 @@ function App() {
               <img src={villa} alt="" style={{ width: '600px', height: '400px' }}/>
             </Col>
             <Col>
-            
+              <Data 
+                listing={listing[0]}
+                nightlyRate={nightlyRate}
+              />
+
+              <Mint
+                provider={provider}
+                token={token}
+                nightlyRate={nightlyRate}
+                setIsLoading={setIsLoading}
+              />
             </Col>
           </Row>
         </>
