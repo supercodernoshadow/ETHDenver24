@@ -5,7 +5,7 @@ import Spinner from 'react-bootstrap/Spinner'
 import { ethers } from 'ethers'
 
 
-const Mint = ({ provider, token, nightlyRate, setIsLoading }) => {
+const Mint = ({ provider, token, nightlyRate }) => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
 	const [isWaiting, setIsWaiting] = useState(false)
@@ -35,9 +35,6 @@ const Mint = ({ provider, token, nightlyRate, setIsLoading }) => {
 		} catch {
 		  window.alert('User rejected or transaction reverted')
 		}
-
-		setIsLoading(true)
-		//setIsWaiting(false)
 
 	}
 	return(

@@ -1,7 +1,11 @@
+import { useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { Container, Row, Col } from 'react-bootstrap'
 import { ethers } from 'ethers'
 
+import './App.css'
+import 'bootstrap/dist/css/bootstrap.min.css'
 import villa from '../Villa.png'
 
 // Components
@@ -10,50 +14,43 @@ import Loading from './Loading';
 import Data from './Data'
 import Mint from './Mint';
 
-// ABIs: Import your contract ABIs here
-import TOKEN_ABI from '../abis/ResToken.json'
+import {
+  loadProvider,
+  loadNetwork,
+  loadAccount,
+  loadTokens
+} from '../store/interactions'
 
-// Config: Import your network config here
-import config from '../config.json';
 
 function App() {
-  const [provider, setProvider] = useState(null)
-  const[token, setToken] = useState(null)
+  let provider, token, rate
 
-  const [account, setAccount] = useState(null)
-
-  const[listing, setListings] = useState(null)
+  const[listing, setListings] = useState([])
 
   const [nightlyRate, setNightlyRate] = useState(0)
-  const [balance, setBalance] = useState(0)
 
-  const [isLoading, setIsLoading] = useState(true)
+  const dispatch = useDispatch()
 
   const loadBlockchainData = async () => {
     // Initiate provider
-    const provider = new ethers.providers.Web3Provider(window.ethereum)
-    setProvider(provider)
+    provider = await loadProvider(dispatch)
 
-    // Initiate token
-    const token = new ethers.Contract(config[31337].token.address, TOKEN_ABI, provider)
-    setToken(token)
+    const chainId = await loadNetwork(provider, dispatch)
 
     // Fetch accounts
-    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
-    const account = ethers.utils.getAddress(accounts[0])
-    setAccount(account)
+    //await loadAccount(provider, dispatch)
+
+    // Initiate Contracts
+    await loadTokens(provider, chainId, dispatch)
 
     // Fetch cost
     setNightlyRate(await token.getCost(1))
-
-    // Fetch account balance
-    setBalance(await token.balanceOf(account, 1))
 
     // Fetch listing count
     const count = await token.listingCount()
     const items = []
 
-    //Fetch proposals
+    //Fetch listings
     for(var i = 0; i < count; i++) {
       const listing = await token.listings(i+1)
       items.push(listing)
@@ -61,24 +58,18 @@ function App() {
 
     setListings(items)
 
-    setIsLoading(false)
   }
 
   useEffect(() => {
-    if (isLoading) {
       loadBlockchainData()
-    }
-  }, [isLoading]);
+  }, []);
 
   return(
     <Container>
-      <Navigation account={account} />
+      <Navigation/>
 
       <h1 className='my-4 text-center'>Res.Tech</h1>
 
-      {isLoading ? (
-        <Loading />
-      ) : (
         <>
           <Row>
             <Col>
@@ -94,12 +85,10 @@ function App() {
                 provider={provider}
                 token={token}
                 nightlyRate={nightlyRate}
-                setIsLoading={setIsLoading}
               />
             </Col>
           </Row>
         </>
-      )}
     </Container>
   )
 }

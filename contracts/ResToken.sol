@@ -84,4 +84,14 @@ contract ResToken is ERC1155, Ownable {
     function getCost(uint256 listingId) external view returns (uint256) {
         return(listings[listingId].nightlyRate);
     }
+
+    // Return booking status for a listing
+    function getBookedDates(uint256 listingId, uint256 start, uint256 end) public view returns (bool[] memory) {
+        bool[] memory booked = new bool[](end - start + 1);
+        for (uint256 i = start; i <= end; i++) {
+            booked[i - start] = listings[listingId].calendar[i];
+        }
+        return booked;
+    }
+
 }
