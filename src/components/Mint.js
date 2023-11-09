@@ -1,11 +1,25 @@
+import { useSelector, useDispatch } from 'react-redux'
 import { useState } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Spinner from 'react-bootstrap/Spinner'
 import { ethers } from 'ethers'
 
+import { loadProvider, loadTokens, loadRates } from '../store/interactions'
 
-const Mint = ({ provider, token, nightlyRate }) => {
+import config from '../config.json'
+
+
+const Mint = () => {
+	//console.log('Mint')
+
+  	const chainId = useSelector(state => state.provider.chainId)
+
+	const dispatch = useDispatch()
+  	const provider = useSelector(state => state.provider)
+  	const token = useSelector(state => state.contracts)
+  	const rates = useSelector(state => state.rates)
+
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
 	const [isWaiting, setIsWaiting] = useState(false)
@@ -29,7 +43,7 @@ const Mint = ({ provider, token, nightlyRate }) => {
 		  const transaction = await token.connect(signer).reserve(1, 
 		  	startNight, 
 		  	endNight, 
-		  	{ value: ethers.utils.parseUnits((nightlyRate * (endNight - startNight)).toString(), 'ether') } 
+		  	{ value: ethers.utils.parseUnits((rates[1] * (endNight - startNight)).toString(), 'ether') } 
 		  	)
 		  await transaction.wait()
 		} catch {

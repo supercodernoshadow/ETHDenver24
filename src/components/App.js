@@ -18,16 +18,14 @@ import {
   loadProvider,
   loadNetwork,
   loadAccount,
-  loadTokens
+  loadTokens,
+  loadListings,
+  loadRates
 } from '../store/interactions'
 
 
 function App() {
-  let provider, token, rate
-
-  const[listing, setListings] = useState([])
-
-  const [nightlyRate, setNightlyRate] = useState(0)
+  let provider, token, rate, listings
 
   const dispatch = useDispatch()
 
@@ -35,28 +33,27 @@ function App() {
     // Initiate provider
     provider = await loadProvider(dispatch)
 
+    // Fetch network chain id
     const chainId = await loadNetwork(provider, dispatch)
 
+    // Reload page when network changes
+    window.ethereum.on('chainChanged', async () => {
+      window.location.reload()
+    })
+
     // Fetch accounts
-    //await loadAccount(provider, dispatch)
+    window.ethereum.on('accountsChanged', async () => {
+      await loadAccount(provider, dispatch)
+    })
 
     // Initiate Contracts
-    await loadTokens(provider, chainId, dispatch)
+    token = await loadTokens(provider, chainId, dispatch)
 
-    // Fetch cost
-    setNightlyRate(await token.getCost(1))
+    // Load listings
+    listings = await loadListings(provider, chainId, dispatch, token)
+    //console.log(listings)
 
-    // Fetch listing count
-    const count = await token.listingCount()
-    const items = []
-
-    //Fetch listings
-    for(var i = 0; i < count; i++) {
-      const listing = await token.listings(i+1)
-      items.push(listing)
-    }
-
-    setListings(items)
+    // Load rates
 
   }
 
@@ -76,16 +73,8 @@ function App() {
               <img src={villa} alt="" style={{ width: '600px', height: '400px' }}/>
             </Col>
             <Col>
-              <Data 
-                listing={listing[0]}
-                nightlyRate={nightlyRate}
-              />
-
-              <Mint
-                provider={provider}
-                token={token}
-                nightlyRate={nightlyRate}
-              />
+              <Data/>
+              <Mint/>
             </Col>
           </Row>
         </>
