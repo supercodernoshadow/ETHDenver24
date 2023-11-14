@@ -5,7 +5,7 @@ export const tokens = createSlice({
 	initialState: {
 		contracts: [],
 		listings: [],
-		rates: []
+		//rates: []
 	},
 	reducers:{
 		setContracts: (state, action) => {

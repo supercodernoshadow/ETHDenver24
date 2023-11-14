@@ -1,48 +1,34 @@
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { ethers } from 'ethers'
 
-import config from '../config.json'
-
-import
-{
-	loadProvider,
-	loadNetwork,
-	loadListings,
-	loadRates
+import {
+  loadListings,
+  loadRates
 } from '../store/interactions'
 
 const Data = () => {
 	//console.log('Data')
 
-  	let provider, token, listings, rates
-
-    // Fetch dispatch
-  	const dispatch = useDispatch()
-
-    // Initiate provider
-  	provider = useSelector(state => state.provider)
-
-    // Fetch network chain id
-  	const chainId = useSelector(state => state.chainId)
+  	let listings, rates
 
   	// Fetch listings
-  	listings = useSelector(state => state.listings)
+  	listings = useSelector(state => state.tokens.listings)
+  	//console.log(listings)
 
 	// Fetch listing rates
-  	rates = useSelector(state => state.rates)
+  	rates = useSelector(state => state.tokens.rates)
+  	//console.log(rates)
 
 	return(
 
 		<div className='my-4 text-center'>
-            {listings && (
             <>
-              <p><strong>Listing Name: {listings[0]}</strong></p>
-              <p>Nightly Rate: {ethers.utils.formatUnits(rates, 0)} ETH</p>
+              <p><strong>Listing Name: {listings}</strong></p>
+              <p>Nightly Rate: {1e18 * rates} ETH</p>
 
             </> 
-            )}     
         </div>
 	)
-}
 
+}
 export default Data;

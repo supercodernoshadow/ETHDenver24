@@ -6,14 +6,14 @@ import Blockies from 'react-blockies'
 
 import logo from '../logo.png'
 
-import { loadProvider, loadAccount } from '../store/interactions'
+import { loadAccount } from '../store/interactions'
 
 import config from '../config.json'
 
 const Navigation = () => {
   let account
   const chainId = useSelector(state => state.provider.chainId)
-  //const account = useSelector(state => state.provider.account)
+  account = useSelector(state => state.provider.account)
 
   const dispatch = useDispatch()
   const provider = useSelector(state => state.provider)
@@ -35,7 +35,7 @@ const Navigation = () => {
       <img
         alt="logo"
         src={logo}
-        width="40"
+        width="50"
         height="40"
         className="d-inline-block align-top mx-3"
       />

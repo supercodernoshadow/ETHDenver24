@@ -1,5 +1,5 @@
 import { ethers } from 'ethers'
-import { useSelector, useDispatch } from 'react-redux'
+//import { useSelector, useDispatch } from 'react-redux'
 
 import { 
 	setProvider,
@@ -37,6 +37,7 @@ export const loadAccount = async (provider, dispatch) => {
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
     const account = ethers.utils.getAddress(accounts[0])
     dispatch(setAccount(account))
+    console.log(account)
 
     return account
 }
@@ -63,12 +64,13 @@ export const loadListings = async (provider, chainId, dispatch, token) => {
 		// Fetch listing count
 	    const countHex = await token.listingCount()
 	    const count = parseInt(countHex, 10)
-	    //console.log(count)
+	    //console.log(await token.listings[0].name)
 	    const items = []
 
 	    //Fetch listings
 	    for(var i = 0; i < count; i++) {
-	      const listing = await token.listings(i+1)
+	      const listing = await token.getListing(i+1)
+	      //console.log(listing)
 	      items.push(listing)
 	    }
 
@@ -86,13 +88,15 @@ export const loadRates = async (provider, chainId, dispatch, token) => {
 	try{
 
 		// Fetch listing count
-	    const count = await token.listingCount()
-	    //console.log('aaa')
+	    const countHex = await token.listingCount()
+	    const count = parseInt(countHex, 10)
 	    const items = []
 
 	    //Fetch listings
 	    for(var i = 0; i < count; i++) {
-	      const rate = await token.getCost(i+1)
+	      const rateBig = await token.getCost(i+1)
+	      const rate = ethers.utils.formatUnits(rateBig, 'ether')
+	      //console.log(rate)
 	      items.push(rate)
 	    }
 

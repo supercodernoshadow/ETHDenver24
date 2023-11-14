@@ -1,21 +1,15 @@
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useState } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Spinner from 'react-bootstrap/Spinner'
 import { ethers } from 'ethers'
 
-import { loadProvider, loadTokens, loadRates } from '../store/interactions'
-
-import config from '../config.json'
+//import { loadProvider, loadTokens, loadRates } from '../store/interactions'
 
 
 const Mint = () => {
-	//console.log('Mint')
 
-  	const chainId = useSelector(state => state.provider.chainId)
-
-	const dispatch = useDispatch()
   	const provider = useSelector(state => state.provider)
   	const token = useSelector(state => state.contracts)
   	const rates = useSelector(state => state.rates)
