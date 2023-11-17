@@ -11,6 +11,8 @@ const config = require('../src/config.json')
 async function main() {
   let transaction, result
   const accounts = await ethers.getSigners()
+  const deployer = accounts[0]
+  const guest = accounts[1]
 
   // Fetch network
   const { chainId } = await ethers.provider.getNetwork()
@@ -23,8 +25,19 @@ async function main() {
   // Set up exchange users
   const deployer = accounts[0]
 
-  // Create listing
-  transaction = await token.connect(deployer).createListing("Luxury Villa", 1)
+  // Create listings
+  transaction = await token.connect(deployer).createListing("Luxury Villa", 3)
+  result = await transaction.wait()
+
+  transaction = await token.connect(deployer).createListing("Downtown Highrise", 2)
+  result = await transaction.wait()
+
+  // Create reservations
+  const transaction = await token.connect(signer).reserve(1, 
+    1, 
+    4, 
+    { value: ethers.utils.parseUnits(9, 'ether') } 
+    )
   result = await transaction.wait()
 }
 

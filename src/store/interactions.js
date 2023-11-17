@@ -95,9 +95,10 @@ export const loadRates = async (provider, chainId, dispatch, token) => {
 	    //Fetch listings
 	    for(var i = 0; i < count; i++) {
 	      const rateBig = await token.getCost(i+1)
-	      const rate = ethers.utils.formatUnits(rateBig, 'ether')
-	      //console.log(rate)
-	      items.push(rate)
+	      const weiRate = ethers.utils.formatUnits(rateBig, 'ether')
+	      const ethRate = weiRate * 1e18
+	      console.log(ethRate)
+	      items.push(ethRate)
 	    }
 
 		dispatch(setRates(items))

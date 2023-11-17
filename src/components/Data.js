@@ -6,10 +6,10 @@ import {
   loadRates
 } from '../store/interactions'
 
-const Data = () => {
+const Data = ( { id } ) => {
 	//console.log('Data')
 
-  	let listings, rates
+  	let listings, rates, rate
 
   	// Fetch listings
   	listings = useSelector(state => state.tokens.listings)
@@ -17,16 +17,20 @@ const Data = () => {
 
 	// Fetch listing rates
   	rates = useSelector(state => state.tokens.rates)
-  	//console.log(rates)
+  	//rate = rates[0]
+	//console.log(rates[[0]])
 
 	return(
 
 		<div className='my-4 text-center'>
+        {listings && rates && (
+
             <>
-              <p><strong>Listing Name: {listings}</strong></p>
-              <p>Nightly Rate: {1e18 * rates} ETH</p>
+              <p><strong>Listing Name: {listings[id]}</strong></p>
+              <p>Nightly Rate: {rates[id]} ETH</p>
 
             </> 
+         )}
         </div>
 	)
 

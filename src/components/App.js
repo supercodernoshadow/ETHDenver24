@@ -77,20 +77,6 @@ function App() {
           <Route path="/reservations" element={<Reservations />} />
         </Routes>  
 
-        <>
-          <Row>
-            <Col>
-              <img src={villa} alt="" style={{ width: '600px', height: '400px' }}/>
-            </Col>
-            <Col>
-              <Data/>
-              <Mint/>
-            </Col>
-          </Row>
-        </>
-
-
-
       </HashRouter>
 
 

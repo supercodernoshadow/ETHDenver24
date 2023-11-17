@@ -8,7 +8,7 @@ import { ethers } from 'ethers'
 //import { loadProvider, loadTokens, loadRates } from '../store/interactions'
 
 
-const Mint = () => {
+const Mint = ( { id } ) => {
 
   	const provider = useSelector(state => state.provider)
   	const token = useSelector(state => state.contracts)
@@ -34,7 +34,7 @@ const Mint = () => {
 
 		try{
 		  const signer = await provider.getSigner()
-		  const transaction = await token.connect(signer).reserve(1, 
+		  const transaction = await token.connect(signer).reserve(id, 
 		  	startNight, 
 		  	endNight, 
 		  	{ value: ethers.utils.parseUnits((rates[1] * (endNight - startNight)).toString(), 'ether') } 
