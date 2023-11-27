@@ -14,6 +14,13 @@ async function main() {
 
   await token.deployed()
   console.log(`Res Token deployed to: ${token.address}\n`)
+
+  // Deploy Auction
+  const Auction = await hre.ethers.getContractFactory('Auction')
+  let auction = await Auction.deploy(token.address)
+
+  await auction.deployed()
+  console.log(`Auction deployed to: ${auction.address}\n`)
 }
 
 // We recommend this pattern to be able to use async/await everywhere

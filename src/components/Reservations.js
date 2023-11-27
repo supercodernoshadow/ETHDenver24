@@ -5,6 +5,7 @@ import balcony from '../Balcony.png'
 import { Container, Row, Col } from 'react-bootstrap'
 
 import Data from './Data';
+import ResAuction from './ResAuction';
 
 const Reservations = () => {
 
@@ -16,7 +17,9 @@ const Reservations = () => {
               <img src={balcony} alt="" style={{ width: '600px', height: '400px' }}/>
             </Col>
             <Col>
-              <Data/>
+            	<ResAuction
+            		id={'0'}
+            	/>
        
             </Col>
           </Row>

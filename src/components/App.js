@@ -20,12 +20,18 @@ import {
   loadProvider,
   loadNetwork,
   loadTokens,
+  loadAuctionContract,
   loadListings,
-  loadRates
+  loadRates,
+  loadAuctionOwners,
+  loadAuctionPrices,
+  loadAuctionStartDates,
+  loadAuctionEndDates,
+  loadAllCompletedAuctions
 } from '../store/interactions'
 
 function App() {
-  let provider, token, listings, rates
+  let provider, token, listings, rates, auction, auctionOwners, auctionPrices, auctionStartDates, auctionEndDates, completedAuctions
 
   const dispatch = useDispatch()
 
@@ -48,6 +54,8 @@ function App() {
 
     // Initiate Contracts
     token = await loadTokens(provider, chainId, dispatch)
+    auction = await loadAuctionContract(provider, chainId, dispatch)
+    //console.log(auction.address)
 
     // Load listings
     listings = await loadListings(provider, chainId, dispatch, token)
@@ -55,6 +63,15 @@ function App() {
 
     // Load rates
     rates = await loadRates(provider, chainId, dispatch, token)
+
+    // Load auctions
+    auctionOwners = await loadAuctionOwners(provider, chainId, dispatch, token, auction)
+    //console.log(auctions)
+    auctionPrices = await loadAuctionPrices(provider, chainId, dispatch, token, auction)
+    auctionStartDates = await loadAuctionStartDates(provider, chainId, dispatch, token, auction)
+    auctionEndDates = await loadAuctionEndDates(provider, chainId, dispatch, token, auction)
+    completedAuctions = await loadAllCompletedAuctions(provider, dispatch, auction)
+    //console.log(completedAuctions)
 
   }, [dispatch]);
 

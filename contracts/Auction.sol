@@ -6,20 +6,28 @@ import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 
-
 import "hardhat/console.sol";
 import "./ResToken.sol";
 
 contract Auction is IERC1155Receiver {
-	IERC1155 public token;
+	ResToken public token;
+
+	struct AuctionRes {
+    	uint256 id;
+    	uint256 price;
+        uint256 startDate;
+        uint256 endDate;
+    }
+
     mapping(uint256 => address) public tokenOwner;
-    mapping(uint256 => uint256) public auctionPrice;
+    mapping(uint256 => AuctionRes) public auctions;
 
     event auctionStarted(uint256 id);
     event auctionCompleted(uint256 id);
 
+
     constructor(address _tokenAddress) {
-        token = IERC1155(_tokenAddress);
+        token = ResToken(_tokenAddress);
     }
 
     // Allow contract to receive ether
@@ -68,9 +76,16 @@ contract Auction is IERC1155Receiver {
         require(token.balanceOf(msg.sender, _tokenId) > 0, "You do not own the token");
         require(token.isApprovedForAll(msg.sender, address(this)), "Contract must be approved");
 
-        // Update token owner and aution price
+        // Update token owner and aution mapping
         tokenOwner[_tokenId] = msg.sender;
-		auctionPrice[_tokenId] = _auctionPrice;
+        auctions[_tokenId].id = _tokenId;
+		auctions[_tokenId].price = _auctionPrice;
+
+		// Update start and end dates of the auctioned reservation
+		(uint256 _startDate,uint256 _endDate) = token.getRes(_tokenId);
+
+		auctions[_tokenId].startDate = _startDate;
+		auctions[_tokenId].endDate = _endDate;
 
 		// Transfer the token to the contract as escrow
         token.safeTransferFrom(msg.sender, address(this), _tokenId, 1, "");
@@ -81,7 +96,7 @@ contract Auction is IERC1155Receiver {
     // Allows users to purchase auctioned tokens
     function buyRes(uint256 _tokenId) external payable {
     	require(token.balanceOf(address(this), _tokenId) > 0, "Token is not available for purchase");
-    	require(msg.value >= auctionPrice[_tokenId], "Insufficient Funds");
+    	require(msg.value >= auctions[_tokenId].price, "Insufficient Funds");
 
 	    // Transfer the token to the buyer
 	    token.safeTransferFrom(address(this), msg.sender, _tokenId, 1, "");
@@ -90,7 +105,29 @@ contract Auction is IERC1155Receiver {
 	    (bool sent, ) = tokenOwner[_tokenId].call{value: msg.value}("");
 	    require(sent, "Failed to send Ether");
 
+	    // Update token owner
+	    tokenOwner[_tokenId] = msg.sender;
+
         emit auctionCompleted(_tokenId);
     }
 
+    // Get the owner of an auction
+    function getAuctionOwner(uint256 _tokenId) external view returns (address) {
+        return (tokenOwner[_tokenId]);
+    }
+
+    // Get price of an auction 
+	function getAuctionPrice(uint256 _tokenId) external view returns (uint256) {
+        return (auctions[_tokenId].price);
+    }
+
+    // Get start date of an auction 
+	function getAuctionStart(uint256 _tokenId) external view returns (uint256) {
+        return (auctions[_tokenId].startDate);
+    }
+
+    // Get start date of an auction 
+	function getAuctionEnd(uint256 _tokenId) external view returns (uint256) {
+        return (auctions[_tokenId].endDate);
+    }
 }

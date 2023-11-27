@@ -35,7 +35,7 @@
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "amount",
+          "name": "id",
           "type": "uint256"
         },
         {
@@ -309,6 +309,30 @@
     {
       "inputs": [
         {
+          "internalType": "uint256",
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getRes",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "address",
           "name": "account",
           "type": "address"
@@ -396,7 +420,15 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "listingId",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "reservations",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "id",
           "type": "uint256"
         },
         {
@@ -407,6 +439,27 @@
         {
           "internalType": "uint256",
           "name": "endDate",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "listingId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_startDate",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_endDate",
           "type": "uint256"
         }
       ],

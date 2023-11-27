@@ -7,8 +7,6 @@ import {
 } from '../store/interactions'
 
 const Data = ( { id } ) => {
-	//console.log('Data')
-
   	let listings, rates, rate
 
   	// Fetch listings
@@ -17,8 +15,6 @@ const Data = ( { id } ) => {
 
 	// Fetch listing rates
   	rates = useSelector(state => state.tokens.rates)
-  	//rate = rates[0]
-	//console.log(rates[[0]])
 
 	return(
 
