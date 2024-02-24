@@ -12,6 +12,9 @@ const Tabs = () => {
 			<LinkContainer to='/reservations'>
 				<Nav.Link>Reservations</Nav.Link>
 			</LinkContainer>
+			<LinkContainer to='/mybookings'>
+				<Nav.Link>My Bookings</Nav.Link>
+			</LinkContainer>
 		</Nav>
 
 	)

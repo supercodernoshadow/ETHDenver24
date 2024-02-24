@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "dependencies": {
+    "@metamask/sdk-react": "^0.15.0",
     "@openzeppelin/contracts": "^5.0.0",
     "@popperjs/core": "^2.11.8",
     "@reduxjs/toolkit": "^1.9.7",

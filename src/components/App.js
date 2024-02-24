@@ -15,6 +15,7 @@ import Data from './Data';
 import Mint from './Mint';
 import Listings from './Listings';
 import Reservations from './Reservations';
+import MyBookings from './MyBookings';
 
 import {
   loadProvider,
@@ -92,6 +93,7 @@ function App() {
         <Routes>
           <Route exact path="/" element={<Listings />} />
           <Route path="/reservations" element={<Reservations />} />
+          <Route path="/mybookings" element={<MyBookings />} />
         </Routes>  
 
       </HashRouter>
